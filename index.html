@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crosses_and_zeros</title>
+    <style type="text/css">
+      .main_text {
+        font-family: Verdana, Arial;
+        font-style: normal;
+        font-size: 40px;
+        text-decoration: none;
+        color: #333333;
+        margin-top: 50px;
+        padding: 15px 0;
+      }
+      .text {
+        font-family: Verdana, Arial;
+        font-style: normal;
+        font-size: 12px;
+        text-decoration: none;
+        color: #9e9898;
+      }
+      table tr:first-child td {
+        border-top: none;
+      }
+      table tr:last-child td {
+        border-bottom: none;
+      }
+      table tr td:first-child {
+        border-left: none;
+      }
+      table tr td:last-child {
+        border-right: none;
+      }
+      .size_td {
+        width: 90px;
+        height: 90px;
+        text-align: center;
+        vertical-align: middle;
+        color: #000000;
+        font-size: 60px;
+      }
+      .all_button {
+        width: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <div align="center">
+      <h1 class="main_text">The game crosses and zeros</h1>
+      <table border="0" width="500" cellspacing="2" cellpadding="2">
+        <tr>
+          <td class="text" valign="top">
+            <br />
+            <form>
+              <table cellspacing="1" cellpadding="1" align="center">
+                <tr>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a0"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a1"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a2"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a3"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a4"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a5"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a6"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a7"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="size_td"
+                      name="a8"
+                      OnClick="clickit(this)"
+                      type="button"
+                    />
+                  </td>
+                </tr>
+              </table>
+
+              <table cellspacing="1" cellpadding="1">
+                <tr>
+                  <td colspan="6">
+                    <h3>Level of difficulty:</h3>
+                    <select
+                      name="difficulty"
+                      OnChange="diff=form.difficulty[form.difficulty.selectedIndex].value;"
+                    >
+                      <option value="1">Beginner</option>
+                      <option value="2">Experienced player</option>
+                      <option value="3" selected>Master</option>
+                      <option value="4">Expert</option>
+                    </select>
+                  </td>
+                </tr>
+
+                <tr>
+                  <br />
+                  <td colspan="6">
+                    <h3>Result:</h3>
+                    <input name="output" type="text" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td colspan="6">
+                    <br />
+                    <input
+                      class="all_button"
+                      type="button"
+                      name="out"
+                      value="Start player"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6">
+                    <input
+                      class="all_button"
+                      type="button"
+                      value="New game"
+                      OnClick="new_game(this.form)"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6">
+                    <input
+                      class="all_button"
+                      type="reset"
+                      value="Clear field"
+                      OnClick="clear_all(this.form)"
+                    />
+                  </td>
+                </tr>
+              </table>
+            </form>
+            <br /><br /><br />
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <script type="text/javascript">
+      step = 0;
+      diff = 3;
+
+      // function gets a random integer (int number)
+
+      function get_random_int(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min)) + min;
+      }
+
+      // function start new game (start computer/player)
+
+      function new_game(form) {
+        if (get_random_int(1, 3) == 1) {
+          form.out.value = "Start computer";
+          form.a4.value = "O";
+        } else {
+          form.out.value = "Start player";
+          clear_all(form);
+        }
+      }
+
+      // function clear all field
+
+      function clear_all(form) {
+        step = 0;
+        for (var i = 0; i < 9; i++) {
+          position = "a" + i;
+          form[position].value = "";
+        }
+      }
+
+      // function click and fill the random cell
+
+      function clickit(field) {
+        if (step == -1) {
+          alert("Click the button for a new game!");
+        }
+
+        position = field.name.substring(1, 2);
+        position = "a" + position;
+
+        field.form.output.value = " ";
+
+        if (field.form[position].value != "") {
+          alert("This field is occupied!");
+        }
+
+        field.form[position].value = "X";
+
+        if (eval_pos(field.form)) {
+          field.form.output.value = "You won!";
+          step = -1;
+        }
+
+        position = get_move(field.form);
+
+        if (position == "") {
+          field.form.output.value = "Nobody won!";
+          step = -1;
+        }
+
+        field.form[position].value = "O";
+
+        if (eval_pos(field.form)) {
+          field.form.output.value = "You lost!";
+          step = -1;
+        }
+      }
+
+      // function eval pos
+
+      function eval_pos(form) {
+        if (
+          (form.a0.value != "" &&
+            form.a0.value == form.a3.value &&
+            form.a0.value == form.a6.value) ||
+          (form.a0.value != "" &&
+            form.a0.value == form.a1.value &&
+            form.a0.value == form.a2.value) ||
+          (form.a0.value != "" &&
+            form.a0.value == form.a4.value &&
+            form.a0.value == form.a8.value) ||
+          (form.a1.value != "" &&
+            form.a1.value == form.a4.value &&
+            form.a1.value == form.a7.value) ||
+          (form.a2.value != "" &&
+            form.a2.value == form.a5.value &&
+            form.a2.value == form.a8.value) ||
+          (form.a2.value != "" &&
+            form.a2.value == form.a4.value &&
+            form.a2.value == form.a6.value) ||
+          (form.a3.value != "" &&
+            form.a3.value == form.a4.value &&
+            form.a3.value == form.a5.value) ||
+          (form.a6.value != "" &&
+            form.a6.value == form.a7.value &&
+            form.a6.value == form.a8.value)
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      // function f(a)
+
+      function f(a) {
+        if (a == "") {
+          return ".";
+        } else {
+          return a;
+        }
+      }
+
+      // function comp move
+
+      function comp_move(form, player, weight, depth) {
+        var cost;
+        var bestcost = -2;
+        var position;
+        var newplayer;
+
+        if (player == "X") {
+          newplayer = "O";
+        } else {
+          newplayer = "X";
+        }
+
+        if (depth == diff) {
+          return 0;
+        }
+
+        if (eval_pos(form)) {
+          return 1;
+        }
+
+        for (var i = 0; i < 9; i++) {
+          position = "a" + i;
+          if (form[position].value != "") {
+            continue;
+          }
+
+          form[position].value = player;
+          cost = comp_move(form, newplayer, -weight, depth + 1);
+
+          if (cost > bestcost) {
+            bestcost = cost;
+            if (cost == 1) {
+              i = 9;
+            }
+          }
+
+          form[position].value = "";
+        }
+
+        if (bestcost == -2) {
+          bestcost = 0;
+        }
+        return -bestcost;
+      }
+
+      // function get move
+
+      function get_move(form) {
+        var cost;
+        var bestcost = -2;
+        bestmove = "";
+
+        if (step++ == 0) {
+          if (form.a4.value == "") {
+            return "a4";
+          }
+        } else {
+          if (form.a0.value == "") {
+            return "a0";
+          }
+        }
+
+        for (var i = 0; i < 9; i++) {
+          localposition = "a" + i;
+          if (form[localposition].value != "") {
+            continue;
+          }
+
+          form[localposition].value = "O";
+          cost = comp_move(form, "X", -1, 0);
+          if (cost > bestcost) {
+            if (cost == 1) {
+              i = 9;
+            }
+            bestmove = localposition;
+            bestcost = cost;
+          }
+          form[localposition].value = "";
+        }
+        return bestmove;
+      }
+
+      // function complain
+
+      function complain(field) {
+        field.form.output.focus();
+        alert("Don't cheat!");
+      }
+    </script>
+  </body>
+</html>
